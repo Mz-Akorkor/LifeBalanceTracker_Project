@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | Life Balance Tracker{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4">Welcome, {{ user.username }}!</h1>
+
+    <h3>Your Tasks</h3>
+    <ul class="list-group mb-4">
+        {% for task in tasks %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ task.title }} — {{ task.status }}
+                <span class="badge bg-primary">{{ task.priority }}</span>
+            </li>
+        {% empty %}
+            <p>No tasks yet. Start by adding one!</p>
+        {% endfor %}
+    </ul>
+
+    <h3>Your Habits</h3>
+    <ul class="list-group">
+        {% for habit in habits %}
+            <li class="list-group-item">{{ habit.name }} ({{ habit.frequency }})</li>
+        {% empty %}
+            <p>No habits yet. Create one to start tracking!</p>
+        {% endfor %}
+    </ul>
+{% endblock %}

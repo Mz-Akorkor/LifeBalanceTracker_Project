@@ -1,18 +1,17 @@
-from django.shortcuts import render
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import User
-from .serializers import RegisterSerializer, LoginSerializer
+from django.contrib.auth import get_user_model
+from .serializers import RegisterSerializer, LoginSerializer, UserSerializer
 
+User = get_user_model()
 
 # Register new user
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
-    permission_classes = [AllowAny]
 
 
 # Login and generate JWT
@@ -36,7 +35,7 @@ class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        print(request.data)  # 👈 add this
+        print(request.data)  
         try:
             refresh_token = request.data["refresh"]
             token = RefreshToken(refresh_token)
@@ -45,3 +44,6 @@ class LogoutView(APIView):
         except Exception as e:
             print("Logout error:", e)
             return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+
+
