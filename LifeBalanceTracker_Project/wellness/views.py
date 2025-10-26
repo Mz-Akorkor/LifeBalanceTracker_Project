@@ -1,7 +1,11 @@
+from django.shortcuts import render, redirect
 from rest_framework import generics, permissions
 from .models import Meal, Workout, SelfCareActivity
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from .forms import MealForm, WorkoutForm, SelfCareForm
 from .serializers import MealSerializer, WorkoutSerializer, SelfCareActivitySerializer
 
 # Meals
@@ -22,7 +26,7 @@ class MealDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Meal.objects.filter(user=self.request.user)
-
+    
 @api_view(['PUT', 'DELETE'])
 @permission_classes([permissions.IsAuthenticated])
 def meal_detail(request, pk):
@@ -117,3 +121,57 @@ def selfcare_detail(request, pk):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@login_required
+def dashboard(request):
+    meals = Meal.objects.filter(user=request.user)
+    workouts = Workout.objects.filter(user=request.user)
+    selfcare = SelfCareActivity.objects.filter(user=request.user)
+    
+    return render(request, 'dashboard.html', {
+        'meals': meals,
+        'workouts': workouts,
+        'selfcare': selfcare,
+    })
+
+def add_meal(request):
+    if request.method == 'POST':
+        form = MealForm(request.POST)
+        if form.is_valid():
+            meal = form.save(commit=False)
+            meal.user = request.user
+            meal.save()
+            messages.success(request, "Meal added successfully! 🍽️")
+            return redirect('wellness_dashboard')
+    else:
+        form = MealForm()
+    return render(request, 'add_meal.html', {'form': form})
+
+@login_required
+def add_workout(request):
+    if request.method == 'POST':
+        form = WorkoutForm(request.POST)
+        if form.is_valid():
+            workout = form.save(commit=False)
+            workout.user = request.user
+            workout.save()
+            messages.success(request, "Workout logged successfully! 💪")
+            return redirect('wellness_dashboard')
+    else:
+        form = WorkoutForm()
+    return render(request, 'add_workout.html', {'form': form})
+
+
+@login_required
+def add_selfcare(request):
+    if request.method == 'POST':
+        form = SelfCareForm(request.POST)
+        if form.is_valid():
+            activity = form.save(commit=False)
+            activity.user = request.user
+            activity.save()
+            messages.success(request, "Self-care activity added! 🧘🏾‍♀️")
+            return redirect('wellness_dashboard')
+    else:
+        form = SelfCareForm()
+    return render(request, 'add_selfcare.html', {'form': form})

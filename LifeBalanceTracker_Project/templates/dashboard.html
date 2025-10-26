@@ -3,26 +3,81 @@
 {% block title %}Dashboard | Life Balance Tracker{% endblock %}
 
 {% block content %}
-    <h1 class="mb-4">Welcome, {{ user.username }}!</h1>
+    <h1 class="mb-4">Welcome, {{ user.username }} 👋🏾</h1>
 
-    <h3>Your Tasks</h3>
+    <!-- ===== Productivity Section ===== -->
+    <h2 class="mb-3">📋 Productivity Overview</h2>
+
+    <!-- Tasks -->
+    <h4>Your Tasks</h4>
     <ul class="list-group mb-4">
         {% for task in tasks %}
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                {{ task.title }} — {{ task.status }}
-                <span class="badge bg-primary">{{ task.priority }}</span>
+            <li class="list-group-item">
+            <strong>{{ task.title }}</strong> — {{task.description }} ({{ task.status }})
+                <span class="badge bg-primary float-end">{{ task.priority }} </span>
             </li>
         {% empty %}
             <p>No tasks yet. Start by adding one!</p>
         {% endfor %}
     </ul>
 
-    <h3>Your Habits</h3>
-    <ul class="list-group">
+    <!-- Habits -->
+    <h4>Your Habits</h4>
+    <ul class="list-group mb-4">
         {% for habit in habits %}
-            <li class="list-group-item">{{ habit.name }} ({{ habit.frequency }})</li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ habit.name }} ({{ habit.frequency }}) 
+                <span class="badge bg-primary">{{ habit.status }}
+                </li>
         {% empty %}
             <p>No habits yet. Create one to start tracking!</p>
         {% endfor %}
     </ul>
+
+    <hr class="my-5">
+
+    <!-- ===== Wellness Section ===== -->
+    <h2 class="mb-3">🌿 Wellness Overview</h2>
+
+    <!-- Meals -->
+    <h4>🍽️ Your Meals</h4>
+    <ul class="list-group mb-4">
+        {% for meal in meals %}
+            <li class="list-group-item">
+                <strong>{{ meal.meal_type }}</strong> — {{ meal.description }}
+                <small class="text-muted float-end">{{ meal.date }}</small>
+            </li>
+        {% empty %}
+            <p>No meals recorded yet. Log one to start tracking your nutrition!</p>
+        {% endfor %}
+    </ul>
+
+    <!-- Workouts -->
+    <h4>💪 Your Workouts</h4>
+    <ul class="list-group mb-4">
+        {% for workout in workouts %}
+            <li class="list-group-item">
+                <strong>{{ workout.todays_workout }}</strong> — {{ workout.duration_minutes }} mins
+                <small class="text-muted float-end">{{ workout.date }}</small>
+            </li>
+        {% empty %}
+            <p>No workouts yet. Add one to stay on track with your fitness goals!</p>
+        {% endfor %}
+    </ul>
+
+    <!-- Self-Care -->
+    <h4>🧘 Your Self-Care</h4>
+    <ul class="list-group mb-4">
+        {% for activity in selfcare %}
+            <li class="list-group-item">
+                <strong>{{ activity.activity_type }}</strong> — {{ activity.notes }} ({{ activity.duration_minutes }}mins)
+                <small class="text-muted float-end">{{ activity.date }}</small>
+            </li>
+        {% empty %}
+            <p>No self-care activities yet. Remember to take time for yourself 💆🏾‍♀️</p>
+        {% endfor %}
+    </ul>
+
+    <hr class="my-5">
+    
 {% endblock %}

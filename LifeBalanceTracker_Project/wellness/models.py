@@ -26,12 +26,12 @@ class Workout(models.Model):
     ]
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='workouts')
-    workout_type = models.CharField(max_length=20, choices=workout_category)
+    todays_workout = models.CharField(max_length=20, choices=workout_category)
     duration_minutes = models.PositiveIntegerField()
     date = models.DateField(default=timezone.now)
 
     def __str__(self):
-        return f"{self.workout_type} - {self.user.username}"
+        return f"{self.todays_workout} - {self.user.username}"
 
 
 class SelfCareActivity(models.Model):

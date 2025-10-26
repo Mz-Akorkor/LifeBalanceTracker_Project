@@ -21,18 +21,18 @@ class Task(models.Model):
     due_date = models.DateField()
     priority = models.CharField(max_length=10, choices=priority_level, default='Medium')
     status = models.CharField(max_length=10, choices=task_status, default='Pending')
-    completed_at = models.DateTimeField(null=True, blank=True)
+    user_task_number = models.PositiveIntegerField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.title} ({self.status})"
     
-    def mark_complte(self):
+    def mark_complete(self):
         """Mark task as complete and store timestamp"""
         self.status = 'Completed'
         self.completed_at = timezone.now()
         self.save()
 
-    def mark_complte(self):
+    def mark_complete(self):
         """Revert task to imcomple"""
         self.status = 'Pending'
         self.completed_at = None

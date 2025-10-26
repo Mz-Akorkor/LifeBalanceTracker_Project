@@ -11,4 +11,5 @@ urlpatterns = [
     path('selfcare/', views.SelfCareListCreateView.as_view(), name='selfcare-list-create'),
     path('selfcare/<int:pk>/', views.SelfCareDetailView.as_view(), name='selfcare-detail'),
     path('selfcare/<int:pk>/', views.selfcare_detail, name='selfcare-detail'),
+    path('dashboard/', views.dashboard, name='dashboard'),
 ]

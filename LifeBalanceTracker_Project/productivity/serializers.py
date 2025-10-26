@@ -8,7 +8,6 @@ class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         fields = '__all__'
-        only_read_fields = ['user', 'completed_at']
 
     def validate_due_date(self,value):
         if value < date.today():
@@ -21,4 +20,3 @@ class HabitSerializer(serializers.ModelSerializer):
     class Meta:
         model = Habit
         fields = '__all__'
-        only_read_fields = ['user']

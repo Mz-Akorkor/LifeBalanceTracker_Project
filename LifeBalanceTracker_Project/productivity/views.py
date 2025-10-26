@@ -4,7 +4,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from django.contrib.auth.decorators import login_required
 from .models import Task, Habit
-from .forms import TaskForm
+from .forms import TaskForm, HabitForm
+from wellness.models import Meal, Workout, SelfCareActivity
 from .serializers import TaskSerializer, HabitSerializer
 
 #TASK
@@ -71,8 +72,8 @@ def mark_task_incomplete(request, pk):
 @api_view(['PUT', 'DELETE'])
 @permission_classes([permissions.IsAuthenticated])
 def task_detail(request, pk):
+    """Handle updating or deleting a specific task."""
     try:
-        # Get the task that belongs to the logged-in user
         task = Task.objects.get(pk=pk, user=request.user)
     except Task.DoesNotExist:
         return Response({'error': 'Task not found'}, status=status.HTTP_404_NOT_FOUND)
@@ -84,10 +85,10 @@ def task_detail(request, pk):
     
     # PUT: update the task
     elif request.method == 'PUT':
-        serializer = TaskSerializer(task, data=request.data)
+        serializer = TaskSerializer(task, data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response({'message': 'Task updated successfully', 'data': serializer.data}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     
@@ -159,7 +160,17 @@ def habit_detail(request, pk):
 def dashboard(request):
     tasks = Task.objects.filter(user=request.user)
     habits = Habit.objects.filter(user=request.user)
-    return render(request, 'dashboard.html', {'tasks': tasks, 'habits': habits})
+    meals = Meal.objects.filter(user=request.user)
+    workouts = Workout.objects.filter(user=request.user)
+    selfcare = SelfCareActivity.objects.filter(user=request.user)
+
+    return render(request, 'dashboard.html', {
+        'tasks': tasks,
+        'habits': habits,
+        'meals': meals,
+        'workouts': workouts,
+        'selfcare': selfcare
+    })
 
 @login_required
 def add_task(request):
@@ -172,5 +183,4 @@ def add_task(request):
             return redirect('dashboard')  
     else:
         form = TaskForm()
-    
     return render(request, 'add_task.html', {'form': form})

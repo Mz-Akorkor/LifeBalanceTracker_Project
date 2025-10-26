@@ -4,19 +4,17 @@ from .models import Meal, Workout, SelfCareActivity
 class MealSerializer(serializers.ModelSerializer):
     class Meta:
         model = Meal
-        fields = '__all__'
-        read_only_fields = ['user']
+        fields = ['id', 'meal_type', 'description', 'date']
 
 
 class WorkoutSerializer(serializers.ModelSerializer):
     class Meta:
         model = Workout
-        fields = '__all__'
-        read_only_fields = ['user']
+        fields = ['id', 'todays_workout', 'duration_minutes', 'date']
 
 
 class SelfCareActivitySerializer(serializers.ModelSerializer):
     class Meta:
         model = SelfCareActivity
-        fields = '__all__'
-        read_only_fields = ['user']
+        fields = ['id', 'activity_type', 'duration_minutes', 'notes', 'date']
+    

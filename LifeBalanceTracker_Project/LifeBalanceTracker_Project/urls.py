@@ -11,7 +11,6 @@ urlpatterns = [
     path('wellness/', include('wellness.urls')),
     path('', dashboard, name='dashboard'),
     path('add-task/', add_task, name='add_task'),
-    # path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    # path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    # path('api/productivity/', include('productivity.urls')),
+    path('', include('rest_framework.urls')),
+    
 ]
